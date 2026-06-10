@@ -1,0 +1,8 @@
+{
+	email {$DOMAIN_EMAIL}
+}
+
+{$DOMAIN_URL} {
+	encode gzip
+	reverse_proxy pocketbase:8090
+}

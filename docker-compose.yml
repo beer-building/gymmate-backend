@@ -17,49 +17,27 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    # наружу не торчит, доступ только через caddy или ssh-туннель
     ports:
-      - "8090:8090"
+      - "127.0.0.1:8090:8090"
 
-  nginx-without-ssl:
-    container_name: nginx-without-ssl
-    build:
-      context: ./nginx
-      dockerfile: nginx-without-ssl.Dockerfile
-    volumes:
-      - ./nginx/nginx-without-ssl.conf:/etc/nginx/nginx.conf:ro
-    ports:
-      - "80:80"
-
-  nginx:
-    container_name: nginx
-    build:
-      context: ./nginx
-      dockerfile: nginx.Dockerfile
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/cert.pem:/etc/cert.pem
-      - ./nginx/key.pem:/etc/key.pem
-      - ./nginx/chain.pem:/etc/chain.pem
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
+      - "443:443/udp"
+    env_file:
+      - .env
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
     depends_on:
       - pocketbase
 
-  certbot:
-    ports:
-      - "6000:80"
-    env_file:
-      - .env
-    # и снова мониторуем директорию nginx
-    volumes:
-      - ./nginx/:/etc/nginx/
-    build:
-      context: ./certbot
-      dockerfile: certbot.Dockerfile
-      # задаем переменные среды
-      args:
-        DOMAIN_EMAIL: ${DOMAIN_EMAIL}
-        DOMAIN_URL: ${DOMAIN_URL}
-    depends_on:
-      - nginx-without-ssl
+volumes:
+  caddy_data:
+  caddy_config:
