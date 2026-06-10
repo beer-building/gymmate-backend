@@ -1,0 +1,5 @@
+.DS_Store
+.env
+pb_data
+nginx/*.pem
+/pocketbase
