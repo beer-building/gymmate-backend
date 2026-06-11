@@ -87,6 +87,7 @@ CREATE TABLE user_programs (
     source_program_id uuid REFERENCES programs (id) ON DELETE SET NULL, -- откуда форкнули
     name              text NOT NULL,
     description       text,
+    difficulty        smallint CHECK (difficulty BETWEEN 1 AND 5), -- snapshot из источника, NULL = не указана
     started_at        timestamptz,
     archived_at       timestamptz,
     created_at        timestamptz NOT NULL DEFAULT now()
