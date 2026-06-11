@@ -41,6 +41,7 @@ CREATE TABLE programs (
     creator_user_id uuid REFERENCES users (id) ON DELETE SET NULL, -- NULL = системная программа
     name            text NOT NULL,
     description     text,
+    difficulty      smallint CHECK (difficulty BETWEEN 1 AND 5), -- NULL = не указана
     is_public       boolean NOT NULL DEFAULT false,
     created_at      timestamptz NOT NULL DEFAULT now(),
     updated_at      timestamptz NOT NULL DEFAULT now()
