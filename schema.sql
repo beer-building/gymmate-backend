@@ -54,7 +54,6 @@ CREATE TABLE program_workouts (
     program_id  uuid NOT NULL REFERENCES programs (id) ON DELETE CASCADE,
     name        text NOT NULL,
     description text,
-    day_of_week smallint CHECK (day_of_week BETWEEN 0 AND 6), -- 0 = понедельник
     order_index integer NOT NULL DEFAULT 0,
     created_at  timestamptz NOT NULL DEFAULT now()
 );
@@ -99,7 +98,6 @@ CREATE TABLE user_program_workouts (
     id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     user_program_id uuid NOT NULL REFERENCES user_programs (id) ON DELETE CASCADE,
     name            text NOT NULL,
-    day_of_week     smallint CHECK (day_of_week BETWEEN 0 AND 6),
     order_index     integer NOT NULL DEFAULT 0
 );
 
