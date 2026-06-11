@@ -3,3 +3,5 @@
 pb_data
 nginx/*.pem
 /pocketbase
+backups/
+.claude/
