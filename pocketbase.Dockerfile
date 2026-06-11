@@ -16,4 +16,4 @@ RUN unzip /tmp/pb.zip -d /pb/
 EXPOSE 8090
 
 # start PocketBase
-CMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8090", "--dir=./pb_data", "--migrationsDir=./pb_migrations"]
+CMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8090", "--dir=./pb_data", "--migrationsDir=./pb_migrations", "--hooksDir=./pb_hooks"]

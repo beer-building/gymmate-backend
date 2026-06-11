@@ -5,3 +5,5 @@ nginx/*.pem
 /pocketbase
 backups/
 .claude/
+/local/
+/www/

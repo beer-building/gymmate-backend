@@ -7,8 +7,11 @@
 ## Что внутри
 
 - **PocketBase** — БД (SQLite), REST/Realtime API и админ-панель. Схема описана
-  миграциями в `pb_migrations/` и применяется автоматически при старте.
+  миграциями в `pb_migrations/` (применяются автоматически при старте),
+  серверная логика — JS-хуками в `pb_hooks/`.
 - **Caddy** — reverse-proxy с автоматическими TLS-сертификатами (используется только на проде).
+  Проксирует `/api/*` и `/_/*` на PocketBase, всё остальное раздаёт как статику
+  SPA-фронтенда из `./www` (деплоится из репозитория `gymmate` командой `make deploy`).
 - Описание модели данных — в [`SCHEMA.md`](SCHEMA.md) (+ справочный PostgreSQL DDL в [`schema.sql`](schema.sql)).
 
 ## Требования
@@ -65,7 +68,18 @@ make run
 # = docker compose up --build -d
 ```
 
-После этого API доступно по `https://<DOMAIN_URL>/api/`, админка — `https://<DOMAIN_URL>/_/`.
+После этого API доступно по `https://<DOMAIN_URL>/api/`, админка — `https://<DOMAIN_URL>/_/`,
+а по остальным путям Caddy раздаёт фронтенд из `./www`.
+
+#### Развёртывание с нуля на VPS
+
+1. Установите Docker (`curl -fsSL https://get.docker.com | sh`).
+2. Склонируйте репозиторий, например в `/opt/gymmate_backend`, заполните `.env`.
+3. Направьте A-запись домена (`DOMAIN_URL`) на IP сервера.
+4. `make run` — Caddy сам выпустит сертификат.
+5. Задеплойте фронтенд: в репозитории `gymmate` выполните
+   `make deploy DEPLOY_HOST=<ssh-хост>` (соберёт статику и зальёт её rsync'ом
+   в `/opt/gymmate_backend/www/`; Caddy подхватывает файлы без перезапуска).
 
 ### Полезные команды
 
