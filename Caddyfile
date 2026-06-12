@@ -13,6 +13,12 @@
 		reverse_proxy pocketbase:8090
 	}
 
+	# llms.txt генерируется бэкендом из каталога упражнений (pb_hooks/llms.pb.js),
+	# поэтому отдаём его из PocketBase, а не из статики SPA
+	handle /llms.txt {
+		reverse_proxy pocketbase:8090
+	}
+
 	# Статика SPA (фронтенд gymmate), деплоится rsync'ом в ./www
 	handle {
 		root * /srv/www
